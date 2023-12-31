@@ -3,7 +3,21 @@ using backend.core.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
+//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+// cors config
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: MyAllowSpecificOrigins,
+//        policy =>
+//        {
+//            policy.WithOrigins("http://localhost:5173");
+//        });
+//});
 
 // DB configuration
 
@@ -37,6 +51,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.Use((ctx, next) =>
+{
+    ctx.Response.Headers["Access-Control-Allow-Origin"] = "http://localhost:5173";
+    return next();
+});
+
+//app.UseCors();
 
 app.UseAuthorization();
 

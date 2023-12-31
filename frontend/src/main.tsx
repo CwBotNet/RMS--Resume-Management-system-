@@ -8,7 +8,9 @@ import { Navigation } from './components/Navigation.tsx'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-      <Navigation />
+      <div className=' md:hidden '>
+        <Navigation />
+      </div>
       <App />
     </ThemeProvider>
   </React.StrictMode>,

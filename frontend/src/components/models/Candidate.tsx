@@ -8,81 +8,70 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-// import axios from "axios"
 
-
-
-const invoices = [
-    {
-        invoice: "INV001",
-        paymentStatus: "Paid",
-        totalAmount: "$250.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV003",
-        paymentStatus: "Unpaid",
-        totalAmount: "$350.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV004",
-        paymentStatus: "Paid",
-        totalAmount: "$450.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV005",
-        paymentStatus: "Paid",
-        totalAmount: "$550.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV006",
-        paymentStatus: "Pending",
-        totalAmount: "$200.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV007",
-        paymentStatus: "Unpaid",
-        totalAmount: "$300.00",
-        paymentMethod: "Credit Card",
-    },
-]
+import axios from "axios"
+import { useEffect, useState } from "react"
 
 export function Candidate() {
+
+    const [apiData, setApiData] = useState<any[]>([])
+    const apiUrl = 'https://localhost:7295/api/Candidate/GetCandidate'
+    useEffect(() => {
+        const fetchData = async () => {
+            axios.get(apiUrl)
+                .then(responce => {
+                    // handel the successfull data
+                    setApiData(responce.data)
+                    // console.log('data', responce.data);
+                })
+                .catch(error => {
+                    console.log("fetching data error from api:", error);
+
+                })
+        }
+
+        fetchData();
+    }, [apiUrl])
+
+    // console.log(apiData);
+
+
     return (
         <Table>
             <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[100px]">Invoice</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Method</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead className="w-[100px] text-center">Id</TableHead>
+                    <TableHead className="text-center">First Name</TableHead>
+                    <TableHead className="text-center">Last Name</TableHead>
+                    <TableHead className="text-center">Email</TableHead>
+                    <TableHead className="text-center">Phone</TableHead>
+                    <TableHead className="text-center">Job Id</TableHead>
+                    <TableHead className="text-center">Job Title</TableHead>
+                    <TableHead className="text-center">Cover letter</TableHead>
+                    <TableHead className="text-center">resume url</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {invoices.map((invoice) => (
-                    <TableRow key={invoice.invoice}>
-                        <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                        <TableCell>{invoice.paymentStatus}</TableCell>
-                        <TableCell>{invoice.paymentMethod}</TableCell>
-                        <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+
+                {apiData.map((data: any) => (
+                    <TableRow key={data.id}>
+                        <TableCell className="text-center">{data.id}</TableCell>
+                        <TableCell className="text-center">{data.firstName}</TableCell>
+                        <TableCell className="text-center">{data.lastName}</TableCell>
+                        <TableCell className="text-center">{data.email}</TableCell>
+                        <TableCell className="text-center">{data.phone}</TableCell>
+                        <TableCell className="text-center">{data.jobId}</TableCell>
+                        <TableCell className="text-center">{data.jobTitle}</TableCell>
+                        <TableCell className="text-center">{data.coverLetter}</TableCell>
+                        <TableCell className="text-center">{data.resumeUrl}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
             <TableFooter>
                 <TableRow>
-                    <TableCell colSpan={3}>Total</TableCell>
-                    <TableCell className="text-right">$2,500.00</TableCell>
+                    <TableCell colSpan={8}>Total Candidate</TableCell>
+                    <TableCell className="text-right">{apiData.length}</TableCell>
                 </TableRow>
             </TableFooter>
         </Table>

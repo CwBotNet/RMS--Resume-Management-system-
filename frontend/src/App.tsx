@@ -9,8 +9,8 @@ function App() {
   return (
     <>
       <div className="container">
-        <div className="flex ml-auto mr-auto w-[500px]">
-          <Candidate />
+        <div className="flex w-[60vw] mt-[30vh]  ">
+          <Candidate  />
         </div>
         <div>
           <Button variant={"destructive"}>click me</Button>
