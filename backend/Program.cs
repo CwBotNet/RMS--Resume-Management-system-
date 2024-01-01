@@ -52,10 +52,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.Use((ctx, next) =>
+// cors config
+app.UseCors(options =>
 {
-    ctx.Response.Headers["Access-Control-Allow-Origin"] = "http://localhost:5173";
-    return next();
+    options
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader();
 });
 
 //app.UseCors();

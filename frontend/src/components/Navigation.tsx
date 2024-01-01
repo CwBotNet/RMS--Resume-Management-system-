@@ -1,7 +1,5 @@
 "use client"
 import { Button } from "@/components/ui/button"
-
-
 import {
     Sheet,
     SheetClose,
@@ -13,6 +11,9 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { ModeToggle } from "./mode-toggle"
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 
 const NavLinks = [
@@ -26,7 +27,7 @@ export function Navigation() {
         <div className="grid grid-cols-2 gap-2">
             <Sheet>
                 <SheetTrigger asChild>
-                    <Button variant="ghost" size={"icon"}>icon</Button>
+                    <Button variant="ghost" size={"icon"}><FontAwesomeIcon icon={faBars} /></Button>
                 </SheetTrigger>
                 <SheetContent side={"left"}>
                     <SheetHeader>
@@ -34,6 +35,7 @@ export function Navigation() {
                         <SheetDescription className="text-center">
                             Make changes to your profile here. Click save when you're done.
                         </SheetDescription>
+                        <hr className="py-[0.3px] bg-purple-300 " />
                     </SheetHeader>
                     <div className="grid gap-8 py-12 text-center">
                         {NavLinks.map((NavLink, i) => (

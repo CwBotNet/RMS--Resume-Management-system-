@@ -8,80 +8,67 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { Button } from "@/components/ui/button";
 
-const invoices = [
-    {
-        invoice: "INV001",
-        paymentStatus: "Paid",
-        totalAmount: "$250.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV003",
-        paymentStatus: "Unpaid",
-        totalAmount: "$350.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV004",
-        paymentStatus: "Paid",
-        totalAmount: "$450.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV005",
-        paymentStatus: "Paid",
-        totalAmount: "$550.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV006",
-        paymentStatus: "Pending",
-        totalAmount: "$200.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV007",
-        paymentStatus: "Unpaid",
-        totalAmount: "$300.00",
-        paymentMethod: "Credit Card",
-    },
-]
+import axios from "axios"
+import { useEffect, useState } from "react"
 
 export function Jobs() {
+    const [jobsData, setJobsData] = useState([]);
+    const ApiUrl = "https://localhost:44387/api/Job/GetJob"
+    useEffect(() => {
+        const fetchData = async () => {
+            await axios.get(ApiUrl)
+                .then(responce => {
+                    setJobsData(responce.data);
+                    // console.log(responce.data);
+
+                })
+                .catch(error => {
+                    console.log(`Jobs Api data fetching error ${error}`);
+
+                })
+        }
+        fetchData()
+    }, [])
+    // console.log(jobsData);
+
     return (
-        <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-[100px]">Invoice</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Method</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {invoices.map((invoice) => (
-                    <TableRow key={invoice.invoice}>
-                        <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                        <TableCell>{invoice.paymentStatus}</TableCell>
-                        <TableCell>{invoice.paymentMethod}</TableCell>
-                        <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+        <div className="">
+            <div className="flex justify-end mb-4">
+                <Button variant={"Primary"}>Add Jobs +</Button>
+            </div>
+            <Table>
+                <TableCaption>A list of Jobs.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[100px]">ID</TableHead>
+                        <TableHead className="text-center">Job Title</TableHead>
+                        <TableHead className="text-center">Job level</TableHead>
+                        <TableHead className="text-center w-[120px]">Company ID</TableHead>
+                        <TableHead className="text-center">Company Name</TableHead>
+                        <TableHead className="text-center">Creted At</TableHead>
                     </TableRow>
-                ))}
-            </TableBody>
-            <TableFooter>
-                <TableRow>
-                    <TableCell colSpan={3}>Total</TableCell>
-                    <TableCell className="text-right">$2,500.00</TableCell>
-                </TableRow>
-            </TableFooter>
-        </Table>
+                </TableHeader>
+                <TableBody>
+                    {jobsData.map((data: any) => (
+                        <TableRow key={data.id}>
+                            <TableCell className="font-medium">{data.id}</TableCell>
+                            <TableCell className="text-center">{data.title}</TableCell>
+                            <TableCell className="text-center">{data.level}</TableCell>
+                            <TableCell className="text-center">{data.companyId}</TableCell>
+                            <TableCell className="text-center">{data.companyName}</TableCell>
+                            <TableCell className="text-center">{data.createdAt}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+                <TableFooter>
+                    <TableRow>
+                        <TableCell colSpan={5}>Total Jobs</TableCell>
+                        <TableCell className="text-center">{jobsData.length}</TableCell>
+                    </TableRow>
+                </TableFooter>
+            </Table>
+        </div>
     )
 }

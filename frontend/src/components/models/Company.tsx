@@ -8,80 +8,64 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import axios from "axios"
+import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button";
 
-const invoices = [
-    {
-        invoice: "INV001",
-        paymentStatus: "Paid",
-        totalAmount: "$250.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV003",
-        paymentStatus: "Unpaid",
-        totalAmount: "$350.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV004",
-        paymentStatus: "Paid",
-        totalAmount: "$450.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV005",
-        paymentStatus: "Paid",
-        totalAmount: "$550.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV006",
-        paymentStatus: "Pending",
-        totalAmount: "$200.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV007",
-        paymentStatus: "Unpaid",
-        totalAmount: "$300.00",
-        paymentMethod: "Credit Card",
-    },
-]
+
 
 export function Company() {
+    const [companyData, setCompanyData] = useState<any>([]);
+    const ApiUri = "https://localhost:44387/api/Company/GetCompany";
+    useEffect(() => {
+        const fetchData = async () => {
+            axios.get(ApiUri)
+                .then(response => {
+                    setCompanyData(response.data);
+                    // console.log(response);
+
+                }
+                ).catch(error => {
+                    console.log(error);
+
+                })
+        }
+        fetchData();
+    }, [])
+    // console.log(companyData);
+
     return (
-        <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-[100px]">Invoice</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Method</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {invoices.map((invoice) => (
-                    <TableRow key={invoice.invoice}>
-                        <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                        <TableCell>{invoice.paymentStatus}</TableCell>
-                        <TableCell>{invoice.paymentMethod}</TableCell>
-                        <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+        <div className="container">
+            <div className="flex justify-end mb-4">
+                <Button variant={"Primary"}>Add company +</Button>
+            </div>
+            <Table>
+                <TableCaption>A list of Companys.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="text-center">ID</TableHead>
+                        <TableHead className="text-center">Name</TableHead>
+                        <TableHead className="text-center">size</TableHead>
+                        <TableHead className="text-center">Created at</TableHead>
                     </TableRow>
-                ))}
-            </TableBody>
-            <TableFooter>
-                <TableRow>
-                    <TableCell colSpan={3}>Total</TableCell>
-                    <TableCell className="text-right">$2,500.00</TableCell>
-                </TableRow>
-            </TableFooter>
-        </Table>
+                </TableHeader>
+                <TableBody>
+                    {companyData.map((data: any) => (
+                        <TableRow key={data.id}>
+                            <TableCell className="font-medium text-center">{data.id}</TableCell>
+                            <TableCell className="font-medium text-center">{data.name}</TableCell>
+                            <TableCell className="text-center">{data.size}</TableCell>
+                            <TableCell className="text-center">{data.createdAt}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+                <TableFooter>
+                    <TableRow>
+                        <TableCell colSpan={3}>Total company</TableCell>
+                        <TableCell className="text-center">{companyData.length}</TableCell>
+                    </TableRow>
+                </TableFooter>
+            </Table>
+        </div>
     )
 }

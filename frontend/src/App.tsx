@@ -1,21 +1,28 @@
 // import { useState } from 'react'
 
-import { Button } from "@/components/ui/button"
-import { Candidate } from "@/components/models/Candidate"
+// import { Button } from "@/components/ui/button"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import CandidatePage from "@/pages/CandidatePage";
+import { Navigation } from "@/components/Navigation";
+import JobsPage from "@/pages/JobsPage";
+import CompanyPage from "@/pages/CompanyPage";
+
 
 function App() {
   // const [count, setCount] = useState(0)
 
   return (
     <>
-      <div className="container">
-        <div className="flex w-[60vw] mt-[30vh]  ">
-          <Candidate  />
+      <BrowserRouter>
+        <div className="">
+          <Navigation />
         </div>
-        <div>
-          <Button variant={"destructive"}>click me</Button>
-        </div>
-      </div>
+        <Routes>
+          <Route path="/Candidates" element={<CandidatePage />} />
+          <Route path="/Jobs" element={<JobsPage />} />
+          <Route path="/Company" element={<CompanyPage />} />
+        </Routes>
+      </BrowserRouter>
 
     </>
   )
