@@ -2,7 +2,6 @@
 using backend.core.Context;
 using backend.core.Dtos.Job;
 using backend.core.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,7 +28,7 @@ namespace backend.Controllers
         {
             try
             {
-                if(dto == null)
+                if (dto == null)
                 {
                     return BadRequest();
                 }
@@ -55,20 +54,47 @@ namespace backend.Controllers
             try
             {
                 var jobs = await _context.Jobs.Include(job => job.Company)
-                    .OrderByDescending(q=> q.CreatedAt)
+                    .OrderByDescending(q => q.CreatedAt)
                     .ToListAsync();
 
                 var convertedJobs = _mapper.Map<IEnumerable<JobGetDto>>(jobs);
 
                 return Ok(convertedJobs);
 
-            }catch (Exception ex)
+            } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
 
         // Update
+
+        [HttpPut("{id}")]
+
+        public async Task<ActionResult> updateJob(long id, [FromForm] JobUpdateDto dto)
+        {
+            try
+            {
+                var exestingJob = await _context.Jobs.FindAsync(id);
+
+                if (id < 0)
+                {
+                    return NotFound("invalid id");
+                }else if (exestingJob == null)
+                {
+                    return BadRequest("exesting job not found");
+                };
+
+                _mapper.Map(dto, exestingJob);
+                await _context.SaveChangesAsync();
+                return Ok("job updated successfuly");
+
+            
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         // Delete
     }

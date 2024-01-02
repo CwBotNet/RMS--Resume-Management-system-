@@ -57,7 +57,28 @@ namespace backend.Controllers
         }
 
         //Update
-        //[HttpPut]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> updateCompany(long id, [FromForm] CompanyUpdateDto dto)
+        {
+            try
+            {
+                var exestingCompany = await _context.Companies.FindAsync(id);
+                if(id < 0) return NotFound();
+
+                if( exestingCompany == null)
+                {
+                    return NotFound("company data not found");
+                }
+
+                _mapper.Map(dto, exestingCompany);
+                await _context.SaveChangesAsync();
+                return Ok("updated successfuly");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         //Delete
         //[HttpDelete]

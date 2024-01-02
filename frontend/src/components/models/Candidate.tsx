@@ -34,6 +34,16 @@ export function Candidate() {
         fetchData();
     }, [apiUrl])
 
+    const deleteACandidate = async () => {
+        try {
+            axios.delete(apiUrl)
+                .then
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
     // console.log(apiData);
 
 

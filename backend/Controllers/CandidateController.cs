@@ -32,21 +32,21 @@ namespace backend.Controllers
 
             try
             {
-                if(pdfFile.Length > fiveMegaBytes || pdfFile.ContentType != pdfType)
+                if (pdfFile.Length > fiveMegaBytes || pdfFile.ContentType != pdfType)
                 {
                     return BadRequest();
                 }
 
                 // first => save pdf to Server
-                
+
                 var resumeUrl = Guid.NewGuid().ToString() + ".pdf";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Documents", "Pdf", resumeUrl);
 
-                using(var stream = new FileStream(filePath, FileMode.Create))
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await pdfFile.CopyToAsync(stream);
                 }
-                
+
                 // Then => save url into our entity
 
                 var newCandidate = _mapper.Map<Candidate>(dto);
@@ -55,7 +55,7 @@ namespace backend.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok("Candidate created successfully");
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -75,7 +75,7 @@ namespace backend.Controllers
                 var convertedCandidates = _mapper.Map<IEnumerable<CandidateGetDto>>(candidates);
                 return Ok(convertedCandidates);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -88,7 +88,7 @@ namespace backend.Controllers
         public IActionResult Download(string url)
         {
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Documents", "Pdf", url);
-            
+
             try
             {
                 if (!System.IO.File.Exists(filePath))
@@ -100,7 +100,7 @@ namespace backend.Controllers
                 var file = File(pdfBytes, "application/pdf", url);
                 return file;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -108,6 +108,57 @@ namespace backend.Controllers
 
         // Update
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(long id, [FromForm] CandidateUpdateDto dto) 
+        {
+            try
+            {
+                if (id < 0) return BadRequest("invalid Id");
+
+                var exestingCandidate = await _context.Candidates.FindAsync(id);
+
+                if(exestingCandidate == null)
+                {
+                    return NotFound("candidate with the specified Id not found");
+                }
+
+
+                _mapper.Map(dto, exestingCandidate);
+                
+                _context.Update(exestingCandidate);
+                await _context.SaveChangesAsync();
+                return Ok("updated successfuly");
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
         // Delete
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCandidate(long id)
+        {
+            var CandidateId = await _context.Candidates.FindAsync(id);
+
+            try
+            {
+                if (CandidateId == null)
+                {
+                    return NotFound();
+                }
+                _context.Candidates.Remove(CandidateId);
+                await _context.SaveChangesAsync();
+
+                return Ok($"candidate is deleted successfuly: {id}");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
     }
 }
