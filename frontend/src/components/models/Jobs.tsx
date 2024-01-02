@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export function Jobs() {
     const [jobsData, setJobsData] = useState([]);
@@ -35,9 +37,6 @@ export function Jobs() {
 
     return (
         <div className="">
-            <div className="flex justify-end mb-4">
-                <Button variant={"Primary"}>Add Jobs +</Button>
-            </div>
             <Table>
                 <TableCaption>A list of Jobs.</TableCaption>
                 <TableHeader>
@@ -59,12 +58,24 @@ export function Jobs() {
                             <TableCell className="text-center">{data.companyId}</TableCell>
                             <TableCell className="text-center">{data.companyName}</TableCell>
                             <TableCell className="text-center">{data.createdAt}</TableCell>
+                            <div className=" flex gap-6 mt-1">
+                                <span className="text-center">
+                                    <Button variant={"Edit"}>
+                                        <FontAwesomeIcon icon={faPenToSquare} />
+                                    </Button>
+                                </span>
+                                <span className="">
+                                    <Button variant={"destructive"}>
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </Button>
+                                </span>
+                            </div>
                         </TableRow>
                     ))}
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <TableCell colSpan={5}>Total Jobs</TableCell>
+                        <TableCell colSpan={6}>Total Jobs</TableCell>
                         <TableCell className="text-center">{jobsData.length}</TableCell>
                     </TableRow>
                 </TableFooter>

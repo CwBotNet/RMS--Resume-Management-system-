@@ -12,6 +12,8 @@ import {
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons"
 
 export function Candidate() {
 
@@ -34,24 +36,21 @@ export function Candidate() {
         fetchData();
     }, [apiUrl])
 
-    const deleteACandidate = async () => {
-        try {
-            axios.delete(apiUrl)
-                .then
-        } catch (error) {
-            console.log(error);
+    // const deleteACandidate = async () => {
+    //     try {
+    //         axios.delete(apiUrl)
+    //             .then()
+    //     } catch (error) {
+    //         console.log(error);
 
-        }
-    }
+    //     }
+    // }
 
     // console.log(apiData);
 
 
     return (
         <div>
-            <div className="flex justify-end mb-4">
-                <Button variant={"Primary"}>Add Candidates +</Button>
-            </div>
             <Table>
                 <TableCaption>A list of Job Candidates</TableCaption>
                 <TableHeader>
@@ -80,12 +79,24 @@ export function Candidate() {
                             <TableCell className="text-center">{data.jobTitle}</TableCell>
                             <TableCell className="text-center">{data.coverLetter}</TableCell>
                             <TableCell className="text-center">{data.resumeUrl}</TableCell>
+                            <div className=" flex gap-6 mt-1">
+                                <span className="text-center">
+                                    <Button variant={"Edit"}>
+                                        <FontAwesomeIcon icon={faPenToSquare} />
+                                    </Button>
+                                </span>
+                                <span className="">
+                                    <Button variant={"destructive"}>
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </Button>
+                                </span>
+                            </div>
                         </TableRow>
                     ))}
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <TableCell colSpan={8}>Total Candidate</TableCell>
+                        <TableCell colSpan={9}>Total Candidate</TableCell>
                         <TableCell className="text-right">{apiData.length}</TableCell>
                     </TableRow>
                 </TableFooter>

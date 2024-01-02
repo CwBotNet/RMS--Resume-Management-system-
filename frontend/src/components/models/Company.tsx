@@ -11,6 +11,8 @@ import {
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 
 
@@ -35,10 +37,7 @@ export function Company() {
     // console.log(companyData);
 
     return (
-        <div className="container">
-            <div className="flex justify-end mb-4">
-                <Button variant={"Primary"}>Add company +</Button>
-            </div>
+        <div className="">
             <Table>
                 <TableCaption>A list of Companys.</TableCaption>
                 <TableHeader>
@@ -56,12 +55,26 @@ export function Company() {
                             <TableCell className="font-medium text-center">{data.name}</TableCell>
                             <TableCell className="text-center">{data.size}</TableCell>
                             <TableCell className="text-center">{data.createdAt}</TableCell>
+                            <div className=" flex gap-6 mt-1">
+                                <span className="text-center">
+                                    <Button variant={"Edit"}>
+                                        <FontAwesomeIcon icon={faPenToSquare} />
+                                    </Button>
+                                </span>
+                                <span className="">
+                                    <Button variant={"destructive"}>
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </Button>
+                                </span>
+                            </div>
+
+
                         </TableRow>
                     ))}
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <TableCell colSpan={3}>Total company</TableCell>
+                        <TableCell colSpan={4}>Total company</TableCell>
                         <TableCell className="text-center">{companyData.length}</TableCell>
                     </TableRow>
                 </TableFooter>
