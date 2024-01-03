@@ -14,13 +14,14 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { error } from "console";
 
 export function Jobs() {
     const [jobsData, setJobsData] = useState([]);
-    const ApiUrl = "https://localhost:44387/api/Job/GetJob"
+    const baseUrl = "https://localhost:44387/api"
     useEffect(() => {
         const fetchData = async () => {
-            await axios.get(ApiUrl)
+            await axios.get(`${baseUrl}/Job/GetJob`)
                 .then(responce => {
                     setJobsData(responce.data);
                     // console.log(responce.data);
@@ -33,6 +34,42 @@ export function Jobs() {
         }
         fetchData()
     }, [])
+
+    // delete function
+
+    const handelPutResquest = async (id: any) => {
+
+        const data = {
+            Title: "mmbs",
+            Level: "cto",
+            CompanyId: 5
+        }
+
+
+        try {
+            await axios.put(`${baseUrl}/Job/UpdateJob/${id}`, {
+                Title: "mmbs",
+                Level: "cto",
+                CompanyId: 5
+            }).then((responce) => {
+                console.log(responce.data);
+
+            }).catch((error) => {
+                console.log(error);
+
+            })
+
+        } catch (error) {
+
+        }
+
+        // console.log();
+
+
+
+    }
+    handelPutResquest(1)
+
     // console.log(jobsData);
 
     return (
@@ -60,7 +97,7 @@ export function Jobs() {
                             <TableCell className="text-center">{data.createdAt}</TableCell>
                             <div className=" flex gap-6 mt-1">
                                 <span className="text-center">
-                                    <Button variant={"Edit"}>
+                                    <Button onClick={handelPutResquest} variant={"Edit"}>
                                         <FontAwesomeIcon icon={faPenToSquare} />
                                     </Button>
                                 </span>
