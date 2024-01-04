@@ -8,7 +8,7 @@ const CandidatePage = () => {
                 <h1 className='font-bold text-xl capitalize'>candidate page</h1>
             </div>
             <div className='flex justify-end mb-4'>
-                <PopUpFormCandidate />
+                <PopUpFormCandidate name="Add"  button="Add candidate +"/>
             </div>
             <Candidate />
         </div>

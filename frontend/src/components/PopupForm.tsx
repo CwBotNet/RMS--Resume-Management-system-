@@ -7,7 +7,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-
 import {
     Select,
     SelectContent,
@@ -15,17 +14,44 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-
+import { useNavigate } from "react-router-dom"
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { ICreateJobDto } from "@/types/global.typing"
+import httpModule from "@/helpers/http.module"
+import { useState } from "react"
+
+enum level {
+    Small,
+    Medium,
+    Large
+}
 
 
 const PopupForm = (props: any) => {
+    const [job, setjob] = useState<ICreateJobDto>({ title: "", level: "", companyId: "" })
+
+
+    // create
+
+    const handelCreateEvent = async () => {
+        const redirect = useNavigate();
+
+        try {
+            const responce = await httpModule.post<ICreateJobDto>("/Job/CreateJob", job)
+            setjob(responce.data)
+            alert("Job is created")
+            console.log(job);
+            redirect('/Job')
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <div>
             <Dialog >
-                <DialogTrigger><Button variant={"Primary"}>Add {props.name} +</Button></DialogTrigger>
+                <DialogTrigger><Button variant={"Primary"}>{props.button}</Button></DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <div className='text-center'>
@@ -44,6 +70,7 @@ const PopupForm = (props: any) => {
                                 id={props.name}
                                 defaultValue="Pedro Duarte"
                                 className="col-span-3"
+                                onChange={(e) => setjob({ ...job, title: e.target.value })}
                             />
                         </div>
 
@@ -55,6 +82,7 @@ const PopupForm = (props: any) => {
                                 id="username"
                                 defaultValue="@peduarte"
                                 className="col-span-3"
+                                onChange={(e) => setjob({ ...job, companyId: e.target.value })}
                             />
                         </div>
 
@@ -63,20 +91,22 @@ const PopupForm = (props: any) => {
                             <Label htmlFor={props.level} className="text-right">
                                 {props.level}
                             </Label>
-                            <Select>
+                            <Select
+                                value={job.level}
+                            >
                                 <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Theme" />
+                                    <SelectValue placeholder="level" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="light">Light</SelectItem>
-                                    <SelectItem value="dark">Dark</SelectItem>
-                                    <SelectItem value="system">System</SelectItem>
+                                    <SelectItem value="small">Small</SelectItem>
+                                    <SelectItem value="medium">Medium</SelectItem>
+                                    <SelectItem value="large">Large</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant={'Primary'}>Add {props.name}</Button>
+                        <Button onClick={handelCreateEvent} variant={'Primary'}>{props.name}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

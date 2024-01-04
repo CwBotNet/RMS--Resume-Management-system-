@@ -1,6 +1,5 @@
 import PopupForm from '@/components/PopupForm'
 import { Jobs } from '@/components/models/Jobs'
-import React from 'react'
 
 const JobsPage = () => {
   return (
@@ -9,7 +8,7 @@ const JobsPage = () => {
         <h1 className='font-bold'>Jobs</h1>
       </div>
       <div className="flex justify-end mb-4">
-        <PopupForm name ="Job" lableFor="Company ID" level="Job level"/> 
+        <PopupForm  name="Add" button="Add Job +" lableFor="Company ID" level="Job level"/> 
       </div>
       <Jobs />
     </div>

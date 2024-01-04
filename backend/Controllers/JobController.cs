@@ -24,7 +24,7 @@ namespace backend.Controllers
         // Create
         [HttpPost]
 
-        public async Task<IActionResult> CreateJob([FromBody] JobCreateDto dto)
+        public async Task<IActionResult> CreateJob([FromForm] JobCreateDto dto)
         {
             try
             {

@@ -13,17 +13,17 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 
-const PopUpFormCandidate = () => {
+const PopUpFormCandidate = (props: any) => {
     return (
         <div>
             <Dialog>
-                <DialogTrigger><Button variant={"Primary"}>Add Candidate</Button></DialogTrigger>
+                <DialogTrigger><Button variant={"Primary"}>{props.button}</Button></DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <div className='text-center'>
-                            <DialogTitle>Add Company</DialogTitle>
+                            <DialogTitle>Add Candidate</DialogTitle>
                             <DialogDescription>
-                                Add companys by filling the form below.
+                                Add Candidate by filling the form below.
                             </DialogDescription>
                         </div>
                     </DialogHeader>
@@ -122,7 +122,7 @@ const PopUpFormCandidate = () => {
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant={'Primary'}>Add Company</Button>
+                        <Button variant={'Primary'}>{props.name}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
