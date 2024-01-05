@@ -12,29 +12,26 @@ import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faL, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import PopupForm from "@/components/PopupForm";
-import { ICreateJobDto, IJob } from "@/types/global.typing";
+import { IJob } from "@/types/global.typing";
 import httpModule from "@/helpers/http.module";
+import { deleteJob } from "@/services/api/job.api";
+import { useNavigate } from "react-router-dom";
 
 export function Jobs() {
     const [jobsData, setJobsData] = useState<IJob[]>([]);
     const [error, setError] = useState(false);
+    const [isDeleted, setIsDeleted] = useState<boolean>(false);
     const [loading, setLoading] = useState<Boolean>(false)
-    const [job, setjob] = useState<ICreateJobDto>({ title: "", level: "", companyId: "" })
-    const baseUrl = "https://localhost:44387/api"
 
+    // const baseUrl = "https://localhost:44387/api"
 
+    const redirect = useNavigate();
 
     // crud request
 
     // create
-    useEffect(() => {
-        ; (async () => {
-            await httpModule.post("/Job/CreateJob")
-
-        })()
-    }, [])
 
     // Read
     useEffect(() => {
@@ -49,44 +46,34 @@ export function Jobs() {
                 console.log(`Jobs Api data fetching error ${e}`)
             }
         })()
-    }, [])
-
-    // Update
+    }, [isDeleted])
 
 
-    // Delete
-    const handelPutResquest = async (id: any) => {
 
 
+
+    const handeEventdelete = async (id: string) => {
         try {
-            await httpModule.put(`${baseUrl}/Job/UpdateJob/${id}`, {
-                Title: "mmbs",
-                Level: "cto",
-                CompanyId: 5
-            }).then((responce) => {
-                console.log(responce.data);
-
-            }).catch((error) => {
-                console.log(error);
-
-            })
+            setError(false)
+            setIsDeleted(false);
+            const responce = await httpModule.delete(`/Job/Delete/${id}`);
+            if (responce.status == 200) {
+                setIsDeleted(true)
+                console.log("delete job " + id)
+            } else if (isDeleted) {
+                setIsDeleted(false)
+                console.log(isDeleted);
+            }
 
         } catch (error) {
-
+            setError(true)
+            console.log(error);
         }
-
-        // console.log();
-    }
-
+    };
 
     if (error) {
         return <div>Something went wrong!</div>;
     }
-
-
-    handelPutResquest(1)
-
-    // console.log(jobsData);
 
     return (
         <div className="">
@@ -111,16 +98,16 @@ export function Jobs() {
                             <TableCell className="text-center">{data.companyId}</TableCell>
                             <TableCell className="text-center">{data.companyName}</TableCell>
                             <TableCell className="text-center">{data.createdAt}</TableCell>
-                            <div className=" flex gap-6 mt-1">
+                            <TableCell className=" flex gap-6 mt-1">
                                 <span className="text-center">
-                                    <PopupForm button={<FontAwesomeIcon icon={faPenToSquare} />} />
+                                    <PopupForm name="Update" button={<FontAwesomeIcon icon={faPenToSquare} />} />
                                 </span>
                                 <span className="">
-                                    <Button variant={"destructive"}>
+                                    <Button onClick={() => { handeEventdelete(data.id) }} variant={"destructive"}>
                                         <FontAwesomeIcon icon={faTrash} />
                                     </Button>
                                 </span>
-                            </div>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

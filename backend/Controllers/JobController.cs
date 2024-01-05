@@ -24,7 +24,7 @@ namespace backend.Controllers
         // Create
         [HttpPost]
 
-        public async Task<IActionResult> CreateJob([FromForm] JobCreateDto dto)
+        public async Task<IActionResult> CreateJob([FromBody] JobCreateDto dto)
         {
             try
             {
@@ -97,5 +97,28 @@ namespace backend.Controllers
         }
 
         // Delete
+
+        [HttpDelete("{id}")]
+        
+        public async Task<IActionResult> Delete(long id)
+        {
+            var exesitingjob = await _context.Jobs.FindAsync(id);
+            try
+            {
+                
+                    if(exesitingjob == null)
+                    {
+                        return BadRequest("invalid id");
+                    }
+
+                _context.Jobs.Remove(exesitingjob);
+                await _context.SaveChangesAsync();
+                return Ok("job deleted successfuly");
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 }

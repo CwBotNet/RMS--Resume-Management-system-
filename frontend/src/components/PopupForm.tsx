@@ -14,12 +14,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useNavigate } from "react-router-dom"
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ICreateJobDto } from "@/types/global.typing"
-import httpModule from "@/helpers/http.module"
 import { useState } from "react"
 
 enum level {
@@ -28,26 +26,11 @@ enum level {
     Large
 }
 
-
 const PopupForm = (props: any) => {
-    const [job, setjob] = useState<ICreateJobDto>({ title: "", level: "", companyId: "" })
+    const [job, setjob] = useState<ICreateJobDto>({ title: "", level: level.Small.toString(), companyId: "" })
 
+    // createJob(job);
 
-    // create
-
-    const handelCreateEvent = async () => {
-        const redirect = useNavigate();
-
-        try {
-            const responce = await httpModule.post<ICreateJobDto>("/Job/CreateJob", job)
-            setjob(responce.data)
-            alert("Job is created")
-            console.log(job);
-            redirect('/Job')
-        } catch (error) {
-            console.log(error);
-        }
-    }
     return (
         <div>
             <Dialog >
@@ -106,7 +89,7 @@ const PopupForm = (props: any) => {
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button onClick={handelCreateEvent} variant={'Primary'}>{props.name}</Button>
+                        <Button variant={'Primary'}>{props.name}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
