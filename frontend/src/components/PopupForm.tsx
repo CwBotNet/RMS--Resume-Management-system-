@@ -1,3 +1,5 @@
+"use client"
+
 import {
     Dialog,
     DialogContent,
@@ -10,6 +12,7 @@ import {
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
     SelectTrigger,
     SelectValue,
@@ -19,17 +22,30 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ICreateJobDto } from "@/types/global.typing"
 import { useState } from "react"
+import { createJob } from "@/services/api/job.api"
 
 enum level {
-    Small,
-    Medium,
-    Large
+    Intern,
+    Junior,
+    MidLevel,
+    Senior,
+    TeamLead,
+    Cto,
+    Architect
 }
 
+
+
+
+const key = Object.keys(level).filter((v) => isNaN(Number(v)));
+
 const PopupForm = (props: any) => {
-    const [job, setjob] = useState<ICreateJobDto>({ title: "", level: level.Small.toString(), companyId: "" })
+    const [job, setjob] = useState<ICreateJobDto>({ title: "", level: "", companyId: "" })
 
     // createJob(job);
+    // console.log(job);
+
+
 
     return (
         <div>
@@ -44,6 +60,7 @@ const PopupForm = (props: any) => {
                             </DialogDescription>
                         </div>
                     </DialogHeader>
+
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="job title" className="text-right">
@@ -74,25 +91,30 @@ const PopupForm = (props: any) => {
                             <Label htmlFor={props.level} className="text-right">
                                 {props.level}
                             </Label>
-                            <Select
-                                value={job.level}
-                            >
+                            <Select onValueChange={(Value) => {
+                                setjob({ ...job, level: Value })
+                            }}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="level" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="small">Small</SelectItem>
-                                    <SelectItem value="medium">Medium</SelectItem>
-                                    <SelectItem value="large">Large</SelectItem>
+                                    <SelectGroup>
+                                        {key.map((key: any, index) => (
+
+                                            <SelectItem key={index} value={key}>{key}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
                                 </SelectContent>
                             </Select>
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant={'Primary'}>{props.name}</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                        <DialogTrigger>
+                        <Button onClick={() => { createJob(job) }} variant={'Primary'}>{props.name}</Button>
+                    </DialogTrigger>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
         </div >
 
     )

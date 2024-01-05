@@ -9,29 +9,31 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
-
 import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faL, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import PopupForm from "@/components/PopupForm";
-import { IJob } from "@/types/global.typing";
+import { ICreateJobDto, IJob } from "@/types/global.typing";
 import httpModule from "@/helpers/http.module";
-import { deleteJob } from "@/services/api/job.api";
-import { useNavigate } from "react-router-dom";
+import { createJob } from "@/services/api/job.api";
 
-export function Jobs() {
+
+export function Jobs(props: any) {
     const [jobsData, setJobsData] = useState<IJob[]>([]);
     const [error, setError] = useState(false);
     const [isDeleted, setIsDeleted] = useState<boolean>(false);
+    const [isUpdate, setIsUpdate] = useState<boolean>(false);
     const [loading, setLoading] = useState<Boolean>(false)
 
     // const baseUrl = "https://localhost:44387/api"
 
-    const redirect = useNavigate();
-
     // crud request
 
     // create
+
+    // createJob()
+
+
 
     // Read
     useEffect(() => {
@@ -46,7 +48,7 @@ export function Jobs() {
                 console.log(`Jobs Api data fetching error ${e}`)
             }
         })()
-    }, [isDeleted])
+    }, [isDeleted, isUpdate])
 
 
 
@@ -100,7 +102,7 @@ export function Jobs() {
                             <TableCell className="text-center">{data.createdAt}</TableCell>
                             <TableCell className=" flex gap-6 mt-1">
                                 <span className="text-center">
-                                    <PopupForm name="Update" button={<FontAwesomeIcon icon={faPenToSquare} />} />
+                                    <PopupForm name="Update" lableFor="Company ID" level="Job level" button={<FontAwesomeIcon icon={faPenToSquare} />} />
                                 </span>
                                 <span className="">
                                     <Button onClick={() => { handeEventdelete(data.id) }} variant={"destructive"}>
