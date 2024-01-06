@@ -1,3 +1,4 @@
+"use client"
 import {
     Table,
     TableBody,
@@ -13,9 +14,8 @@ import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import PopupForm from "@/components/PopupForm";
-import { ICreateJobDto, IJob } from "@/types/global.typing";
+import { IJob } from "@/types/global.typing";
 import httpModule from "@/helpers/http.module";
-import { createJob } from "@/services/api/job.api";
 
 
 export function Jobs(props: any) {
@@ -24,15 +24,6 @@ export function Jobs(props: any) {
     const [isDeleted, setIsDeleted] = useState<boolean>(false);
     const [isUpdate, setIsUpdate] = useState<boolean>(false);
     const [loading, setLoading] = useState<Boolean>(false)
-
-    // const baseUrl = "https://localhost:44387/api"
-
-    // crud request
-
-    // create
-
-    // createJob()
-
 
 
     // Read
@@ -51,7 +42,15 @@ export function Jobs(props: any) {
     }, [isDeleted, isUpdate])
 
 
+    const handelEventUpdate = () => {
+        if (isUpdate) {
+            setIsUpdate(false)
 
+        } else if (!isUpdate) {
+            setIsUpdate(true)
+
+        }
+    }
 
 
     const handeEventdelete = async (id: string) => {
@@ -79,6 +78,9 @@ export function Jobs(props: any) {
 
     return (
         <div className="">
+            <div className="flex justify-end mb-4" onClick={handelEventUpdate}>
+                <PopupForm PostMethod="post" name="Add" button="Add Job +" lableFor="Company ID" level="Job level" />
+            </div>
             <Table>
                 <TableCaption>A list of Jobs.</TableCaption>
                 <TableHeader>
@@ -101,8 +103,8 @@ export function Jobs(props: any) {
                             <TableCell className="text-center">{data.companyName}</TableCell>
                             <TableCell className="text-center">{data.createdAt}</TableCell>
                             <TableCell className=" flex gap-6 mt-1">
-                                <span className="text-center">
-                                    <PopupForm name="Update" lableFor="Company ID" level="Job level" button={<FontAwesomeIcon icon={faPenToSquare} />} />
+                                <span className="text-center" onClick={handelEventUpdate} >
+                                    <PopupForm id={data.id} name="Update" lableFor="Company ID" level="Job level" button={<FontAwesomeIcon icon={faPenToSquare} />} />
                                 </span>
                                 <span className="">
                                     <Button onClick={() => { handeEventdelete(data.id) }} variant={"destructive"}>

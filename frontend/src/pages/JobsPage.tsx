@@ -7,10 +7,7 @@ const JobsPage = () => {
       <div className="flex justify-center mb-12 mt-[20vh]">
         <h1 className='font-bold'>Jobs</h1>
       </div>
-      <div className="flex justify-end mb-4">
-        <PopupForm name="Add" button="Add Job +" lableFor="Company ID" level="Job level" />
-      </div>
-      <Jobs update={true} />
+      <Jobs />
     </div>
   )
 }

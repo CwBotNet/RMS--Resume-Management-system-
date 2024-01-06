@@ -71,7 +71,7 @@ namespace backend.Controllers
 
         [HttpPut("{id}")]
 
-        public async Task<ActionResult> updateJob(long id, [FromForm] JobUpdateDto dto)
+        public async Task<ActionResult> updateJob(long id, [FromBody] JobUpdateDto dto)
         {
             try
             {

@@ -22,7 +22,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ICreateJobDto } from "@/types/global.typing"
 import { useState } from "react"
-import { createJob } from "@/services/api/job.api"
+import { createJob, getAllJobs, updateJob } from "@/services/api/job.api"
 
 enum level {
     Intern,
@@ -34,6 +34,11 @@ enum level {
     Architect
 }
 
+// console.log(
+
+//     getAllJobs()
+// );
+
 
 
 
@@ -42,8 +47,15 @@ const key = Object.keys(level).filter((v) => isNaN(Number(v)));
 const PopupForm = (props: any) => {
     const [job, setjob] = useState<ICreateJobDto>({ title: "", level: "", companyId: "" })
 
-    // createJob(job);
-    // console.log(job);
+    const handleOnClick = (id: string, jobData: any) => {
+        if (props.PostMethod == "post") {
+            createJob(job);
+
+        } else {
+            updateJob(id, jobData);
+
+        }
+    }
 
 
 
@@ -54,7 +66,7 @@ const PopupForm = (props: any) => {
                 <DialogContent>
                     <DialogHeader>
                         <div className='text-center'>
-                            <DialogTitle>Add {props.name}</DialogTitle>
+                            <DialogTitle>{props.name}</DialogTitle>
                             <DialogDescription>
                                 Add {props.name} by filling the form below.
                             </DialogDescription>
@@ -110,11 +122,11 @@ const PopupForm = (props: any) => {
                     </div>
                     <DialogFooter>
                         <DialogTrigger>
-                        <Button onClick={() => { createJob(job) }} variant={'Primary'}>{props.name}</Button>
-                    </DialogTrigger>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                            <Button onClick={() => { handleOnClick(props.id, job); }} variant={'Primary'}>{props.name}</Button>
+                        </DialogTrigger>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div >
 
     )
