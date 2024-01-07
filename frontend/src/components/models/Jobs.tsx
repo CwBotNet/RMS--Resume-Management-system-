@@ -16,9 +16,11 @@ import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import PopupForm from "@/components/PopupForm";
 import { IJob } from "@/types/global.typing";
 import httpModule from "@/helpers/http.module";
+import { dateFormate } from "@/helpers/dateFormater";
+import { ScrollArea } from "../ui/scroll-area";
 
 
-export function Jobs(props: any) {
+export function Jobs() {
     const [jobsData, setJobsData] = useState<IJob[]>([]);
     const [error, setError] = useState(false);
     const [isDeleted, setIsDeleted] = useState<boolean>(false);
@@ -46,6 +48,7 @@ export function Jobs(props: any) {
         if (isUpdate) {
             setIsUpdate(false)
 
+
         } else if (!isUpdate) {
             setIsUpdate(true)
 
@@ -72,56 +75,61 @@ export function Jobs(props: any) {
         }
     };
 
+
+
+
     if (error) {
         return <div>Something went wrong!</div>;
     }
 
     return (
+
         <div className="">
             <div className="flex justify-end mb-4" onClick={handelEventUpdate}>
                 <PopupForm PostMethod="post" name="Add" button="Add Job +" lableFor="Company ID" level="Job level" />
             </div>
-            <Table>
-                <TableCaption>A list of Jobs.</TableCaption>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-[100px]">ID</TableHead>
-                        <TableHead className="text-center">Job Title</TableHead>
-                        <TableHead className="text-center">Job level</TableHead>
-                        <TableHead className="text-center w-[120px]">Company ID</TableHead>
-                        <TableHead className="text-center">Company Name</TableHead>
-                        <TableHead className="text-center">Creted At</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {jobsData.map((data: any) => (
-                        <TableRow key={data.id}>
-                            <TableCell className="font-medium">{data.id}</TableCell>
-                            <TableCell className="text-center">{data.title}</TableCell>
-                            <TableCell className="text-center">{data.level}</TableCell>
-                            <TableCell className="text-center">{data.companyId}</TableCell>
-                            <TableCell className="text-center">{data.companyName}</TableCell>
-                            <TableCell className="text-center">{data.createdAt}</TableCell>
-                            <TableCell className=" flex gap-6 mt-1">
-                                <span className="text-center" onClick={handelEventUpdate} >
-                                    <PopupForm id={data.id} name="Update" lableFor="Company ID" level="Job level" button={<FontAwesomeIcon icon={faPenToSquare} />} />
-                                </span>
-                                <span className="">
-                                    <Button onClick={() => { handeEventdelete(data.id) }} variant={"destructive"}>
-                                        <FontAwesomeIcon icon={faTrash} />
-                                    </Button>
-                                </span>
-                            </TableCell>
+            <ScrollArea className="h-100">
+                <Table>
+                    <TableCaption>A list of Jobs.</TableCaption>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="text-center">ID</TableHead>
+                            <TableHead className="text-center">Job Title</TableHead>
+                            <TableHead className="text-center">Job level</TableHead>
+                            <TableHead className="text-center">Company Name</TableHead>
+                            <TableHead className="text-center">Creted At</TableHead>
                         </TableRow>
-                    ))}
-                </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TableCell colSpan={6}>Total Jobs</TableCell>
-                        <TableCell className="text-center">{jobsData.length}</TableCell>
-                    </TableRow>
-                </TableFooter>
-            </Table>
-        </div>
+                    </TableHeader>
+
+                    <TableBody>
+                        {jobsData.map((data: any) => (
+                            <TableRow key={data.id}>
+                                <TableCell className="font-medium text-center">{data.id}</TableCell>
+                                <TableCell className="text-center">{data.title}</TableCell>
+                                <TableCell className="text-center">{data.level}</TableCell>
+                                <TableCell className="text-center">{data.companyName}</TableCell>
+                                <TableCell className="text-center">{dateFormate(data.createdAt)}</TableCell>
+                                <TableCell className=" flex gap-6 justify-end mt-1">
+                                    <span className="text-center" onClick={handelEventUpdate} >
+                                        <PopupForm id={data.id} name="Update" lableFor="Company ID" level="Job level" button={<FontAwesomeIcon icon={faPenToSquare} />} />
+                                    </span>
+                                    <span className="">
+                                        <Button onClick={() => { handeEventdelete(data.id) }} variant={"destructive"}>
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </Button>
+                                    </span>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                    <TableFooter>
+                        <TableRow className="w-[400px]">
+                            <TableCell colSpan={12} >Total Jobs</TableCell>
+                            <TableCell className="text-right">  {jobsData.length}</TableCell>
+                        </TableRow>
+                    </TableFooter>
+                </Table>
+            </ScrollArea>
+        </div >
     )
 }

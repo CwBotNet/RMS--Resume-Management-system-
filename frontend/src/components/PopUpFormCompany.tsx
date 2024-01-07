@@ -19,9 +19,22 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useState } from "react"
+import { ICreateCompanyDto } from "@/types/global.typing"
+import { createCompany, updateCompany } from "@/services/api/company.api"
 
 
 const PopUpFormCompany = (props: any) => {
+    const [company, setCompany] = useState<ICreateCompanyDto>({ name: "", size: "" })
+
+    const handleOnClick = (id: string, updateComapny: any) => {
+        if (props.PostMethod == "post") {
+            createCompany(company)
+        } else {
+            updateCompany(id, updateComapny);
+        }
+    }
+
     return (
         <div>
             <Dialog >
@@ -44,6 +57,7 @@ const PopUpFormCompany = (props: any) => {
                                 id="company name"
                                 defaultValue="Pedro Duarte"
                                 className="col-span-3"
+                                onChange={(e) => { setCompany({ ...company, name: e.target.value }) }}
                             />
                         </div>
 
@@ -52,21 +66,25 @@ const PopUpFormCompany = (props: any) => {
                             <Label htmlFor="company size" className="text-right">
                                 Company Size
                             </Label>
-                            <Select>
+                            <Select onValueChange={(value) => {
+                                setCompany({ ...company, 'size': value })
+                            }}>
                                 <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Theme" />
+                                    <SelectValue placeholder="level" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="light">Light</SelectItem>
-                                    <SelectItem value="dark">Dark</SelectItem>
-                                    <SelectItem value="system">System</SelectItem>
+                                    <SelectItem value="small">Small</SelectItem>
+                                    <SelectItem value="medium">Medium</SelectItem>
+                                    <SelectItem value="large">Large</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                     </div>
-                    <DialogFooter>
-                        <Button variant={'Primary'}>{props.name}</Button>
-                    </DialogFooter>
+                    <DialogTrigger>
+                        <DialogFooter>
+                            <Button onClick={() => { handleOnClick(props.id, company); }} variant={'Primary'}>{props.name}</Button>
+                        </DialogFooter>
+                    </DialogTrigger>
                 </DialogContent>
             </Dialog>
         </div >

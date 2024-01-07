@@ -58,7 +58,7 @@ namespace backend.Controllers
 
         //Update
         [HttpPut("{id}")]
-        public async Task<ActionResult> updateCompany(long id, [FromForm] CompanyUpdateDto dto)
+        public async Task<ActionResult> updateCompany(long id, [FromBody] CompanyUpdateDto dto)
         {
             try
             {
@@ -81,6 +81,27 @@ namespace backend.Controllers
         }
 
         //Delete
-        //[HttpDelete]
+        
+        [HttpDelete("{id}")]
+
+        public async Task<ActionResult> Delete(long id)
+        {
+            var exesitingCompany = await _context.Companies.FindAsync(id);
+            try
+            {
+                if (exesitingCompany == null) 
+                { 
+                    return NotFound("invalid company id"); 
+                }
+
+                _context.Companies.Remove(exesitingCompany);
+                await _context.SaveChangesAsync();
+                return Ok($"company {id} is deleted successfully");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -42,6 +42,6 @@ export interface ICreateCandidateDto {
   lastName: string;
   email: string;
   phone: string;
-  coverLetter: string;
   jobId: string;
+  coverLetter: string;
 }

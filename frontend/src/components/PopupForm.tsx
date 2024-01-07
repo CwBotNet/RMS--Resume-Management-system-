@@ -21,8 +21,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ICreateJobDto } from "@/types/global.typing"
-import { useState } from "react"
-import { createJob, getAllJobs, updateJob } from "@/services/api/job.api"
+import { useEffect, useState } from "react"
+import { ICompany } from "@/types/global.typing"
+import { createJob, updateJob } from "@/services/api/job.api"
+import httpModule from "@/helpers/http.module"
 
 enum level {
     Intern,
@@ -34,10 +36,6 @@ enum level {
     Architect
 }
 
-// console.log(
-
-//     getAllJobs()
-// );
 
 
 
@@ -46,6 +44,18 @@ const key = Object.keys(level).filter((v) => isNaN(Number(v)));
 
 const PopupForm = (props: any) => {
     const [job, setjob] = useState<ICreateJobDto>({ title: "", level: "", companyId: "" })
+    const [companies, setCompanies] = useState<ICompany[]>([])
+
+
+    useEffect(() => {
+        ; (async () => {
+            const response = await httpModule.get<ICompany[]>('/Company/GetCompany')
+            const company = response.data
+            setCompanies(company)
+            return company
+
+        })()
+    }, [])
 
     const handleOnClick = (id: string, jobData: any) => {
         if (props.PostMethod == "post") {
@@ -86,27 +96,37 @@ const PopupForm = (props: any) => {
                             />
                         </div>
 
+                        {/* company */}
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor={props.lableFor} className="text-right">
-                                {props.lableFor}
+                            <Label htmlFor={props.level} className="text-right">
+                                company
                             </Label>
-                            <Input
-                                id="username"
-                                defaultValue="@peduarte"
-                                className="col-span-3"
-                                onChange={(e) => setjob({ ...job, companyId: e.target.value })}
-                            />
+                            <Select onValueChange={(Value) => {
+                                setjob({ ...job, companyId: Value })
+                            }}>
+                                <SelectTrigger className="w-[340px]">
+                                    <SelectValue placeholder="google" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        {companies.map((item) => (
+
+                                            <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         {/* job level */}
-                        <div className="grid grid-cols-4 items-center gap-4">
+                        <div className="grid grid-cols-4 items-center gap-4 w-">
                             <Label htmlFor={props.level} className="text-right">
                                 {props.level}
                             </Label>
                             <Select onValueChange={(Value) => {
                                 setjob({ ...job, level: Value })
                             }}>
-                                <SelectTrigger className="w-[180px]">
+                                <SelectTrigger className="w-[340px]">
                                     <SelectValue placeholder="level" />
                                 </SelectTrigger>
                                 <SelectContent>
